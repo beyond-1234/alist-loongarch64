@@ -37,16 +37,6 @@ docker logs 容器名
 docker exec -it 容器名 ./alist admin set 新密码
 ```
 
-## 镜像更新升级
-```bash
-# 拉取最新龙芯架构镜像
-docker pull tangxindan1234/alist-loongarch64
-# 停止并删除旧容器
-docker stop alist && docker rm alist
-# 重新执行上方快速启动的 run 命令
-```
-所有网盘配置、数据均保存在 `alist-data` 数据卷中，升级过程不会丢失。
-
 ## 可选环境变量
 在 `docker run` 中追加 `-e 变量名=值` 自定义运行参数：
 | 环境变量 | 默认值 | 说明 |
@@ -55,7 +45,19 @@ docker stop alist && docker rm alist
 | PGID     | 0      | 指定容器内运行服务的用户组ID |
 | TZ       | Asia/Shanghai | 容器时区 |
 
+## 本地编译
+
+克隆官方仓库，按照下面的修改说明修改 `Dockerfile` 即可
+
 ## 修改说明
 
+- 添加新世界专有镜像源到 `/etc/docker/daemon.json`
+```json
+{
+  "registry-mirrors": [
+    "https://cr.loongnix.cn"
+  ]
+}
+```
 - 将默认的基础镜像 `alpine` 改成了 `https://lcr.loongnix.cn/` 的 `alpine` 镜像
 - 将默认的 `COPY --chmod=755` 拆成了两条指令 `COPY` 和 `RUN chmod 755`
